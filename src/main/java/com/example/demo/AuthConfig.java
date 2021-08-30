@@ -45,7 +45,7 @@ public class AuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationController authenticationController() throws UnsupportedEncodingException {
+    public AuthenticationController authenticationController() {
         JwkProvider jwkProvider = new JwkProviderBuilder(domain).build();
         return AuthenticationController.newBuilder(domain, clientId, clientSecret)
                 .withJwkProvider(jwkProvider)

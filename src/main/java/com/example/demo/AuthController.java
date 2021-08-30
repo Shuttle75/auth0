@@ -4,7 +4,9 @@ import com.auth0.AuthenticationController;
 import com.auth0.IdentityVerificationException;
 import com.auth0.Tokens;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,9 @@ import java.io.IOException;
 
 @Controller
 public class AuthController {
+    @Value(value = "${com.auth0.audience}")
+    private String audience;
+
     private final AuthenticationController authenticationController;
 
     public AuthController(AuthenticationController authenticationController) {
@@ -32,7 +37,7 @@ public class AuthController {
     }
 
     @GetMapping(value="/callback")
-    public void callback(HttpServletRequest request, HttpServletResponse response) throws IdentityVerificationException, IOException {
+    public void callback(HttpServletRequest request, HttpServletResponse response) throws IdentityVerificationException, IOException, JWTDecodeException {
         Tokens tokens = authenticationController.handle(request, response);
 
         DecodedJWT jwt = JWT.decode(tokens.getIdToken());
